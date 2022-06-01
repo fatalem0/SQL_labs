@@ -1,0 +1,30 @@
+// fetch operation
+
+SELECT * FROM timetable WHERE classes_types = 'лекция';
+
+// projection operation
+
+SELECT DISTINCT academic_degree FROM teachers;
+
+// union operation
+
+SELECT * FROM teachers WHERE position = 'доцент'
+UNION
+SELECT * FROM teachers WHERE academic_degree = 'кандидат наук';
+
+// intersection operation
+
+SELECT * FROM teachers WHERE position IN ('доцент','профессор') AND academic_degree IN ('кандидат наук');
+
+// difference operation
+
+SELECT * FROM teachers WHERE position IN ('доцент','профессор') AND academic_degree NOT IN ('кандидат наук');
+
+// Cartesian product operation
+
+SELECT * FROM disciplines CROSS JOIN departaments;
+
+// join operation
+
+SELECT d.discipline_id, d.discipline_name
+FROM disciplines d JOIN timetable t ON d.discipline_id = t.time_id;

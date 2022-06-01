@@ -1,0 +1,48 @@
+// first task
+
+CREATE or replace FUNCTION checking_timetable () RETURNS trigger AS $$
+declare
+   result integer;
+begin
+   SELECT COUNT(*) INTO result FROM timetable
+       WHERE time_id IS NULL or discipline IS NULL or groupes IS NULL or classes_types IS NULL
+       or teacher IS NULL or day_of_the_week IS NULL or time IS NULL or lecture IS NULL;
+   IF result != 0
+       THEN RAISE EXCEPTION 'Одно или несколько значений пусты';
+   END IF;
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER checking_timetable
+   BEFORE insert OR delete OR update ON timetable
+   FOR EACH ROW
+   EXECUTE PROCEDURE checking_timetable();
+
+// usage of first task
+
+INSERT INTO timetable VALUES (8, 1, 'ИТСС', 'лекция', NULL, 'пт', '19:30:00', 101);
+
+// second task
+
+CREATE or replace FUNCTION check_timetable_if_free () RETURNS trigger AS $$
+declare
+   result RECORD;
+begin
+   SELECT EXISTS(SELECT * FROM timetable
+       WHERE lecture = CAST(TG_ARGV[7] as numeric) AND CAST(time as text) = TG_ARGV[6]) INTO result;
+   IF result IS NOT NULL
+       THEN RAISE EXCEPTION 'В это время аудитория уже занята';
+   END IF;
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_timetable_if_free
+   BEFORE insert ON timetable
+   FOR EACH ROW
+   EXECUTE PROCEDURE check_timetable_if_free();
+
+// usage of second task
+
+INSERT INTO timetable VALUES (8, 1, 'ИТСС', 'лекция', 'КФ', 'пт', '19:30:00', 101);

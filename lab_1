@@ -1,0 +1,69 @@
+CREATE TABLE departaments (
+  departament_id NUMERIC(3, 0) PRIMARY KEY,
+  departament_name VARCHAR(30)
+);
+
+CREATE TABLE teachers (
+  teacher_id NUMERIC(3, 0) PRIMARY KEY,
+  surname VARCHAR(20) NOT NULL,
+  name_and_patronymic VARCHAR(40) NOT NULL,
+  position VARCHAR(30) NOT NULL,
+  academic_degree VARCHAR(20) NOT NULL,
+  departament CHAR(6) UNIQUE NOT NULL
+);
+
+CREATE TABLE disciplines (
+  discipline_id NUMERIC(6, 0) PRIMARY KEY,
+  discipline_name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE timetable (
+  time_id NUMERIC(5, 0) PRIMARY KEY,
+  discipline NUMERIC(6, 0) REFERENCES disciplines(discipline_id),
+  groupes VARCHAR(15) NOT NULL,
+  classes_types VARCHAR(20) NOT NULL,
+  teacher CHAR(6) REFERENCES teachers(departament),
+  day_of_the_week CHAR(2) NOT NULL,
+  time TIME NOT NULL,
+  lecture NUMERIC(3, 0) NOT NULL
+);
+
+INSERT INTO departaments(departament_id, departament_name)
+VALUES
+   (1, 'Кафедра экономики'),
+   (2, 'Кафедра приборостроения'),
+   (3, 'Кафедра физики'),
+   (4, 'Кафедра машиностроения');
+
+INSERT INTO teachers(teacher_id, surname, name_and_patronymic, position, academic_degree, departament)
+VALUES
+   (1, 'Топский', 'Павел Викторович', 'старший преподаватель', 'доктор наук', 'КЭ'),
+   (2, 'Левый', 'Кира Денисович', 'старший преподаватель', 'кандидат наук', 'КМ'),
+   (3, 'Правый', 'Грачя Оганесянов', 'доцент', 'кандидат наук', 'КФ'),
+   (4, 'Горшков', 'Михаил Гамлетович', 'доцент', 'кандидат наук', 'КЛ'),
+   (5, 'Тулупов', 'Игорь Ильдусович', 'старший преподаватель', 'доктор наук', 'КД'),
+   (6, 'Лескин', 'Сергей Витальевич', 'профессор', 'кандидат наук', 'КП'),
+   (7, 'Бабинцев', 'Лев Васильевич', 'старший преподаватель', 'кандидат наук', 'КЖ'),
+   (8, 'Ефремов', 'Роберт Ильдусович', 'доцент', 'доктор наук', 'КЯ');
+
+INSERT INTO disciplines (discipline_id, discipline_name)
+VALUES
+   (1, 'Математический анализ'),
+   (2, 'Физика'),
+   (3, 'Приборостроение'),
+   (4, 'Проектный семинар'),
+   (5, 'Базы данных'),
+   (6, 'Электротехника'),
+   (7, 'Экономика'),
+   (8, 'Музыка'),
+   (9, 'ИЗО'),
+   (10, 'Схемотехника');
+
+INSERT INTO timetable (time_id, discipline, groupes, classes_types, teacher, day_of_the_week, time, lecture)
+VALUES
+   (1, 9, 'СУЗ', 'лекция', 'КМ', 'ср', '14:00', 106),
+   (2, 10, 'КИВ', 'лабораторная работа', 'КЭ', 'вт', '14:05', 105),
+   (3, 3, 'КИБ', 'семинар', 'КЭ', 'сб', '09:15', 104),
+   (4, 2, 'КБ', 'семинар', 'КП', 'пн', '11:23', 103),
+   (5, 4, 'ПМ', 'лекция', 'КП', 'пн', '17:00', 102),
+   (6, 1, 'ИТСС', 'лекция', 'КФ', 'пт', '19:30', 101);

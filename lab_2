@@ -1,0 +1,45 @@
+// first task (two options)
+
+// (first option)
+
+SELECT teach.departament, teach.surname, teach.name_and_patronymic, d.discipline_name
+FROM timetable time JOIN teachers teach ON teach.departament = time.teacher
+JOIN disciplines d ON time.discipline = d.discipline_id
+ORDER BY teach.departament;
+
+// (second option)
+
+SELECT teach.departament, teach.surname, teach.name_and_patronymic, d.discipline_name
+FROM timetable time, teachers teach, disciplines d
+WHERE teach.departament = time.teacher AND time.discipline = d.discipline_id
+ORDER BY teach.departament;
+
+// second task
+
+SELECT teach.departament, teach.surname, teach.name_and_patronymic, teach.position, teach.academic_degree
+FROM teachers teach LEFT JOIN timetable time ON teach.departament = time.teacher
+WHERE teach.position = 'доцент' AND teach.academic_degree <> 'кандидат наук'
+OR teach.position <> 'доцент' AND teach.academic_degree = 'кандидат наук'
+OR teach.position = 'профессор' AND teach.academic_degree <> 'доктор наук'
+OR teach.position <> 'профессор' AND teach.academic_degree = 'доктор наук'
+ORDER BY teach.departament;
+
+// third task
+
+SELECT teach.departament, d.discipline_name
+FROM teachers teach JOIN timetable time ON teach.departament = time.teacher
+JOIN disciplines d ON time.discipline = d.discipline_id
+WHERE time.classes_types <> 'лекция'
+ORDER BY teach.departament;
+
+// fourth task
+
+SELECT teach.surname, teach.name_and_patronymic, count(time.day_of_the_week)
+FROM teachers teach JOIN timetable time ON teach.departament = time.teacher
+JOIN disciplines d ON time.discipline = d.discipline_id
+GROUP BY teach.surname, teach.name_and_patronymic
+HAVING count(time.day_of_the_week) < 4;
+
+// fifth task
+
+SELECT * FROM timetable t WHERE groupes = 'М-214';

@@ -1,0 +1,15 @@
+// first task
+
+CREATE VIEW staff_department AS
+SELECT teach.departament,
+   sum(case when teach.position = 'профессор' then 1 else 0 end) AS professor_count,
+   sum(case when teach.position = 'доцент' then 1 else 0 end) AS docent_count
+FROM teachers teach
+GROUP BY teach.departament;
+
+// second task
+
+CREATE VIEW disciplines_without_labs AS
+SELECT d.discipline_id, d.discipline_name
+FROM disciplines d LEFT JOIN timetable t ON d.discipline_id = t.time_id
+WHERE t.classes_types <> 'лабораторная работа';

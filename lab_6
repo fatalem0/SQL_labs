@@ -1,0 +1,43 @@
+// first task
+
+CREATE FUNCTION findTeacherByName(surname VARCHAR, name_and_patronymic VARCHAR) RETURNS varchar AS $$
+DECLARE
+   result RECORD;
+BEGIN
+   SELECT
+          teachers.surname teacher_surname,
+          substring(split_part(teachers.name_and_patronymic::TEXT,' ', 1), 1, 1) teacher_name,
+          substring(split_part(teachers.name_and_patronymic::TEXT,' ', 2), 1, 1) teacher_patronymic
+   INTO result
+   FROM teachers
+   WHERE findTeacherByName.surname = teachers.surname AND
+         findTeacherByName.name_and_patronymic = teachers.name_and_patronymic;
+
+   IF result.teacher_surname IS NULL AND result.teacher_name IS NULL AND result.teacher_patronymic IS NULL THEN
+       RETURN 'Не найден';
+   ELSE
+       RETURN result;
+   END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+// usage of first task
+
+SELECT findTeacherByName('Топский', 'Павел Викторович');
+
+// second task
+
+CREATE FUNCTION findGaps() RETURNS TABLE(day_of_the_week CHAR(2), name CHAR(6), time_start TIME, time_end TIME) as $$
+BEGIN
+   RETURN QUERY
+       SELECT t1.day_of_the_week, t1.teacher, t1.time, t2.time
+       FROM timetable t1
+       JOIN timetable t2
+           ON t2.time_id = t1.time_id - 1
+       WHERE t1.day_of_the_week = t2.day_of_the_week AND t1.teacher = t2.teacher;
+END;
+$$ LANGUAGE plpgsql;
+
+// usage of second task
+
+SELECT findGaps();
